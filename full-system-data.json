@@ -1,0 +1,764 @@
+{
+  "nodes": [
+    {
+      "id": "client-init-1",
+      "x": 200,
+      "y": 300,
+      "label": "Начало",
+      "type": "circle",
+      "category": "init",
+      "description": "Начальная точка WebRTC процесса. Пользователь инициирует или получает звонок."
+    },
+    {
+      "id": "client-init-2",
+      "x": 200,
+      "y": 450,
+      "label": "handleStartPeerConnection",
+      "type": "hexagon",
+      "category": "init",
+      "description": "Создание RTCPeerConnection. Проверка доступности медиа устройств (камера, микрофон). Инициализация локальных потоков."
+    },
+    {
+      "id": "client-init-3",
+      "x": 200,
+      "y": 600,
+      "label": "createPeerConnection",
+      "type": "hexagon",
+      "category": "init",
+      "description": "Создание WebRTC соединения через WebRTCConnection. Настройка обработчиков событий (onTrack, onIceCandidate)."
+    },
+    {
+      "id": "client-init-4",
+      "x": 200,
+      "y": 750,
+      "label": "Проверка устройств",
+      "type": "diamond",
+      "category": "init",
+      "description": "Проверка доступности медиа устройств через enumerateDevices(). Определение наличия камеры и микрофона."
+    },
+    {
+      "id": "client-init-5",
+      "x": 200,
+      "y": 900,
+      "label": "Определение устройства",
+      "type": "diamond",
+      "category": "init",
+      "description": "Определение типа устройства (mobile/desktop) через getMobileOS(). Влияет на задержки и обработку звонков."
+    },
+    {
+      "id": "client-ws-1",
+      "x": 500,
+      "y": 600,
+      "label": "WebSocket подключение",
+      "type": "rectangle",
+      "category": "connection",
+      "description": "Подключение к WebSocket серверу через useWebSocket(). Получение socket, sendMessage, sendMessageWithPing, subscribe. sendMessageWithPing автоматически отправляет PING перед каждым сообщением для проверки соединения. Если сервер не отвечает на PING или соединение разорвано, выполняется автоматическое переподключение."
+    },
+    {
+      "id": "client-initiator-1",
+      "x": 800,
+      "y": 900,
+      "label": "Инициатор звонка",
+      "type": "circle",
+      "category": "initiator",
+      "description": "Пользователь начинает звонок через handleCalling(). Устанавливается isCallInitiator = true. Открывается модальное окно CALL_MODAL."
+    },
+    {
+      "id": "client-initiator-2",
+      "x": 800,
+      "y": 1050,
+      "label": "handleCreateOffer",
+      "type": "rectangle",
+      "category": "initiator",
+      "description": "Создание WebRTC offer через handleCreateOffer(). Учитывается наличие камеры. Создается SDP offer."
+    },
+    {
+      "id": "client-initiator-3",
+      "x": 800,
+      "y": 1200,
+      "label": "Отправка OFFER",
+      "type": "rectangle",
+      "category": "initiator",
+      "description": "Отправка OFFER через WebSocket sendMessageWithPing('/OFFER'). sendMessageWithPing автоматически отправляет PING перед сообщением для проверки соединения. Если соединение мертвое (>5 минут без PING), выполняется переподключение. Включает SDP, кандидатов, данные пользователя. Воспроизведение звонка (playRingtone)."
+    },
+    {
+      "id": "client-initiator-4",
+      "x": 800,
+      "y": 1350,
+      "label": "Получение ANSWER",
+      "type": "rectangle",
+      "category": "initiator",
+      "description": "Получение ANSWER через subscribe('acceptCall'). Установка remote answer через handleSetRemoteAnswer()."
+    },
+    {
+      "id": "client-acceptor-1",
+      "x": 1100,
+      "y": 900,
+      "label": "Получение входящего",
+      "type": "circle",
+      "category": "acceptor",
+      "description": "Получение входящего звонка через subscribe('call'). Сохранение offer от инициатора в spdFromAnotherPeer. Воспроизведение входящего звонка (playCalling)."
+    },
+    {
+      "id": "client-acceptor-2",
+      "x": 1100,
+      "y": 1050,
+      "label": "Принятие звонка",
+      "type": "circle",
+      "category": "acceptor",
+      "description": "Пользователь принимает звонок через handleAccept(). Устанавливается isCallInitiator = false. Для мобильных устройств добавляется задержка 1 секунда."
+    },
+    {
+      "id": "client-acceptor-3",
+      "x": 1100,
+      "y": 1200,
+      "label": "handleSetRemoteOffer",
+      "type": "rectangle",
+      "category": "acceptor",
+      "description": "Установка remote offer через handleSetRemoteOffer(). Обработка SDP offer от инициатора."
+    },
+    {
+      "id": "client-acceptor-4",
+      "x": 1100,
+      "y": 1350,
+      "label": "handleCreateAnswer",
+      "type": "rectangle",
+      "category": "acceptor",
+      "description": "Создание WebRTC answer через handleCreateAnswer(). Создается SDP answer на основе remote offer."
+    },
+    {
+      "id": "client-acceptor-5",
+      "x": 1100,
+      "y": 1500,
+      "label": "Отправка ANSWER",
+      "type": "rectangle",
+      "category": "acceptor",
+      "description": "Отправка ANSWER через WebSocket sendMessageWithPing('/ANSWER'). sendMessageWithPing автоматически отправляет PING перед сообщением для проверки соединения. Если соединение мертвое (>5 минут без PING), выполняется переподключение. Включает SDP answer."
+    },
+    {
+      "id": "client-ice-1",
+      "x": 1400,
+      "y": 1500,
+      "label": "Генерация ICE",
+      "type": "hexagon",
+      "category": "ice",
+      "description": "Генерация ICE кандидатов через WebRTC. Кандидаты собираются автоматически при создании offer/answer."
+    },
+    {
+      "id": "client-ice-2",
+      "x": 1400,
+      "y": 1650,
+      "label": "Отправка ADD_ICE",
+      "type": "rectangle",
+      "category": "ice",
+      "description": "Отправка ICE кандидатов через sendMessageWithPing('/ADD_ICE'). Включает iceParams с массивом кандидатов."
+    },
+    {
+      "id": "client-ice-3",
+      "x": 1400,
+      "y": 1800,
+      "label": "Отправка SWAP_ICE",
+      "type": "rectangle",
+      "category": "ice",
+      "description": "Отправка сигнала обмена ICE через sendMessageWithPing('/SWAP_ICE'). Запрашивает обмен кандидатами."
+    },
+    {
+      "id": "client-ice-4",
+      "x": 1400,
+      "y": 1950,
+      "label": "Получение swapIce",
+      "type": "rectangle",
+      "category": "ice",
+      "description": "Получение ICE кандидатов через subscribe('swapIce'). Добавление remote ICE через addRemoteIce()."
+    },
+    {
+      "id": "client-active-1",
+      "x": 1700,
+      "y": 1800,
+      "label": "Событие connect",
+      "type": "circle",
+      "category": "active",
+      "description": "Получение события 'connect' от сервера. Установка isCallReady = true. Статус меняется на 'call'. Остановка звуков звонка."
+    },
+    {
+      "id": "client-active-2",
+      "x": 1700,
+      "y": 1950,
+      "label": "Активный звонок",
+      "type": "circle",
+      "category": "active",
+      "description": "Звонок установлен и активен. Обмен медиа потоками (аудио/видео). Мониторинг состояния соединения."
+    },
+    {
+      "id": "client-media-1",
+      "x": 2000,
+      "y": 2100,
+      "label": "Обновление медиа",
+      "type": "circle",
+      "category": "media",
+      "description": "Изменение медиа потоков: включение/выключение камеры, микрофона. Вызов handleUpdateOffer() для пересогласования."
+    },
+    {
+      "id": "client-media-2",
+      "x": 2000,
+      "y": 2250,
+      "label": "Отправка UPDATE_OFFER",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Отправка обновленного offer через sendMessageWithPing('/UPDATE_OFFER'). Помечается флагом isUpdateOffer."
+    },
+    {
+      "id": "client-media-3",
+      "x": 2000,
+      "y": 2400,
+      "label": "Получение updateOffer",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Получение обновленного offer через subscribe('updateOffer'). Установка remote offer и создание нового answer."
+    },
+    {
+      "id": "client-media-4",
+      "x": 2000,
+      "y": 2550,
+      "label": "Отправка UPDATE_ANSWER",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Отправка обновленного answer через sendMessageWithPing('/UPDATE_ANSWER')."
+    },
+    {
+      "id": "client-error-1",
+      "x": 2600,
+      "y": 2700,
+      "label": "Отклонение (инициатор)",
+      "type": "circle",
+      "category": "error",
+      "description": "Инициатор отклоняет звонок через handleDecline(). Отправка DECLINE через WebSocket. Закрытие соединения."
+    },
+    {
+      "id": "client-error-2",
+      "x": 2600,
+      "y": 2850,
+      "label": "Получение decline",
+      "type": "rectangle",
+      "category": "error",
+      "description": "Получение отклонения через subscribe('decline'). Показ модального окна CALL_REJECT или закрытие. Закрытие соединения."
+    },
+    {
+      "id": "server-ws",
+      "x": 4000,
+      "y": 800,
+      "label": "WebSocket Server",
+      "type": "rectangle",
+      "category": "server",
+      "description": "WebSocketServer на порту 5555. Обрабатывает connection, message и close события. Инициализирует heartbeat проверку. При отправке любого сообщения проверяет lastPingTime - если прошло более 5 минут без PING, соединение считается мертвым и закрывается."
+    },
+    {
+      "id": "server-parse",
+      "x": 4300,
+      "y": 800,
+      "label": "parse.js",
+      "type": "diamond",
+      "category": "utility",
+      "description": "Парсинг входящих сообщений. Определяет тип сообщения: PING (простая строка) или JSON с route, userId, data. Обновляет lastPingTime при получении PING. Перед обработкой любого сообщения проверяет, не истек ли heartbeat (5 минут без PING) - если истек, соединение закрывается и восстанавливается через handleReconnect."
+    },
+    {
+      "id": "server-routes",
+      "x": 4300,
+      "y": 950,
+      "label": "routes.js",
+      "type": "rectangle",
+      "category": "utility",
+      "description": "Маршрутизация сообщений. Маппинг route из JSON сообщения на соответствующую функцию-обработчик (handler)."
+    },
+    {
+      "id": "server-handler-offer",
+      "x": 4600,
+      "y": 400,
+      "label": "handleOffer",
+      "type": "rectangle",
+      "category": "handler",
+      "description": "Обработка WebRTC Offer. Инициация звонка: устанавливает статус 'calling', создает связи между пользователями, добавляет в waiting list, отправляет /call получателю."
+    },
+    {
+      "id": "server-handler-answer",
+      "x": 4600,
+      "y": 600,
+      "label": "handleAnswer",
+      "type": "rectangle",
+      "category": "handler",
+      "description": "Обработка WebRTC Answer. Принятие звонка: устанавливает статус 'ringing', создает пару через setPair, отправляет /acceptCall инициатору, рассылает /connect."
+    },
+    {
+      "id": "server-handler-decline",
+      "x": 4600,
+      "y": 800,
+      "label": "handleDecline",
+      "type": "rectangle",
+      "category": "handler",
+      "description": "Отклонение звонка. Сбрасывает статусы на 'idle'/'ended', отправляет /decline инициатору, удаляет пару через removePair."
+    },
+    {
+      "id": "server-handler-ice",
+      "x": 4600,
+      "y": 1000,
+      "label": "handleAddIce",
+      "type": "rectangle",
+      "category": "handler",
+      "description": "Сбор ICE кандидатов. Сохраняет iceParams в объекте пользователя для последующего обмена при установлении WebRTC соединения."
+    },
+    {
+      "id": "server-handler-swap",
+      "x": 4600,
+      "y": 1200,
+      "label": "handleSwap",
+      "type": "rectangle",
+      "category": "handler",
+      "description": "Обмен ICE кандидатами. Обменивает iceParams между двумя пользователями в паре, отправляет /swapIce каждому с кандидатами другого, устанавливает статус 'in_call'."
+    },
+    {
+      "id": "server-handler-update-offer",
+      "x": 4600,
+      "y": 1400,
+      "label": "handleUpdateOffer",
+      "type": "rectangle",
+      "category": "handler",
+      "description": "Обновление SDP Offer. Используется для реконнекта WebRTC соединения. Отправляет /updateOffer с новым SDP без изменения статусов."
+    },
+    {
+      "id": "server-handler-update-answer",
+      "x": 4600,
+      "y": 1600,
+      "label": "handleUpdateAnswer",
+      "type": "rectangle",
+      "category": "handler",
+      "description": "Обновление SDP Answer. Используется для реконнекта WebRTC соединения. Отправляет /updateAnswer и рассылает /updateIce для обновления ICE."
+    },
+    {
+      "id": "server-handler-update-media",
+      "x": 4600,
+      "y": 1800,
+      "label": "handleUpdateMedia",
+      "type": "rectangle",
+      "category": "handler",
+      "description": "Обновление медиа-настроек. Передает изменения медиа-параметров (mute, video toggle и т.д.) кандидату через /updateMedia."
+    },
+    {
+      "id": "server-send",
+      "x": 4300,
+      "y": 1100,
+      "label": "send.js",
+      "type": "rectangle",
+      "category": "utility",
+      "description": "Отправка сообщений клиентам. Функции sendMessage и sendCancelMessage. Форматирует данные через formData и отправляет через WebSocket конкретному пользователю или всем сессиям пользователя."
+    },
+    {
+      "id": "server-broadcast",
+      "x": 4300,
+      "y": 1250,
+      "label": "broadcast.js",
+      "type": "rectangle",
+      "category": "utility",
+      "description": "Рассылка сообщений паре. Отправляет сообщение обоим пользователям в паре одновременно (например, /connect, /updateIce)."
+    },
+    {
+      "id": "server-storage-users",
+      "x": 5200,
+      "y": 800,
+      "label": "users Map",
+      "type": "circle",
+      "category": "storage",
+      "description": "Хранилище пользователей. Map<userId, Map<WebSocket, UserData>>. Хранит все активные сессии пользователей. Каждый userId может иметь несколько WebSocket соединений."
+    },
+    {
+      "id": "server-storage-pairs",
+      "x": 5200,
+      "y": 1000,
+      "label": "pairOfPeers",
+      "type": "circle",
+      "category": "storage",
+      "description": "Пары пользователей. Object {userId: candidateId}. Двунаправленная связь между пользователями в активном звонке. Используется для быстрого поиска собеседника."
+    },
+    {
+      "id": "server-storage-waiting",
+      "x": 5200,
+      "y": 1200,
+      "label": "waitingList",
+      "type": "circle",
+      "category": "storage",
+      "description": "Список ожидающих звонков. Object {userId: callData}. Хранит данные входящих звонков для пользователей, которые еще не обработали ADD_USER. Автоматически очищается через 1 минуту."
+    },
+    {
+      "id": "server-management",
+      "x": 4900,
+      "y": 1000,
+      "label": "users/index.js",
+      "type": "rectangle",
+      "category": "management",
+      "description": "Управление пользователями. Функции: getPair, setPair, removePair, removeUser, updateStatus, pushInWaitingList, removeFromWaitingList, getFromWaitingList, isSendingOnePeers."
+    },
+    {
+      "id": "server-heartbeat",
+      "x": 5500,
+      "y": 1200,
+      "label": "startHeartbeat",
+      "type": "hexagon",
+      "category": "system",
+      "description": "Heartbeat проверка соединений. Запускается при старте сервера, проверяет все соединения каждые 30 секунд. Для каждого соединения проверяет lastPingTime - если прошло более 5 минут без PING, соединение закрывается как мертвое. Клиент должен переподключиться и отправить RECONNECT для восстановления. Также проверка выполняется перед обработкой каждого сообщения в parse.js."
+    },
+    {
+      "id": "server-error",
+      "x": 5500,
+      "y": 1350,
+      "label": "sendError.js",
+      "type": "rectangle",
+      "category": "system",
+      "description": "Централизованная обработка ошибок. Логирует ошибку, отправляет уведомление в Telegram через sendBroadcast, отправляет ошибку клиенту через WebSocket."
+    },
+    {
+      "id": "server-logger",
+      "x": 5500,
+      "y": 1500,
+      "label": "logger.js",
+      "type": "rectangle",
+      "category": "system",
+      "description": "Логирование ошибок. Записывает ошибки в файл logs/server.log с меткой времени и информацией об ошибке."
+    }
+  ],
+  "edges": [
+    {
+      "from": "client-init-1",
+      "to": "client-init-2",
+      "label": "Начало процесса"
+    },
+    {
+      "from": "client-init-2",
+      "to": "client-init-3",
+      "label": "Создание соединения"
+    },
+    {
+      "from": "client-init-2",
+      "to": "client-init-4",
+      "label": "Проверка устройств"
+    },
+    {
+      "from": "client-init-4",
+      "to": "client-init-5",
+      "label": "enumerateDevices()"
+    },
+    {
+      "from": "client-init-3",
+      "to": "client-ws-1",
+      "label": "WebSocket подключение"
+    },
+    {
+      "from": "client-ws-1",
+      "to": "client-initiator-1",
+      "label": "Инициатор"
+    },
+    {
+      "from": "client-ws-1",
+      "to": "client-acceptor-1",
+      "label": "Получатель"
+    },
+    {
+      "from": "client-initiator-1",
+      "to": "client-initiator-2",
+      "label": "handleCalling()"
+    },
+    {
+      "from": "client-initiator-2",
+      "to": "client-initiator-3",
+      "label": "Создан offer"
+    },
+    {
+      "from": "client-initiator-3",
+      "to": "server-ws",
+      "label": "OFFER → WebSocket"
+    },
+    {
+      "from": "server-ws",
+      "to": "server-parse",
+      "label": "message"
+    },
+    {
+      "from": "server-parse",
+      "to": "server-routes",
+      "label": "route + data"
+    },
+    {
+      "from": "server-routes",
+      "to": "server-handler-offer",
+      "label": "OFFER"
+    },
+    {
+      "from": "server-handler-offer",
+      "to": "server-send",
+      "label": "sendMessage()"
+    },
+    {
+      "from": "server-send",
+      "to": "server-ws",
+      "label": "ws.send()"
+    },
+    {
+      "from": "server-ws",
+      "to": "client-acceptor-1",
+      "label": "/call → WebSocket"
+    },
+    {
+      "from": "client-acceptor-1",
+      "to": "client-acceptor-2",
+      "label": "Пользователь принимает"
+    },
+    {
+      "from": "client-acceptor-2",
+      "to": "client-acceptor-3",
+      "label": "handleAccept()"
+    },
+    {
+      "from": "client-acceptor-3",
+      "to": "client-acceptor-4",
+      "label": "Установка offer"
+    },
+    {
+      "from": "client-acceptor-4",
+      "to": "client-acceptor-5",
+      "label": "Создан answer"
+    },
+    {
+      "from": "client-acceptor-5",
+      "to": "server-ws",
+      "label": "ANSWER → WebSocket"
+    },
+    {
+      "from": "server-routes",
+      "to": "server-handler-answer",
+      "label": "ANSWER"
+    },
+    {
+      "from": "server-handler-answer",
+      "to": "server-send",
+      "label": "sendMessage()"
+    },
+    {
+      "from": "server-handler-answer",
+      "to": "server-broadcast",
+      "label": "broadcast()"
+    },
+    {
+      "from": "server-broadcast",
+      "to": "server-ws",
+      "label": "ws.send()"
+    },
+    {
+      "from": "server-ws",
+      "to": "client-initiator-4",
+      "label": "/acceptCall → WebSocket"
+    },
+    {
+      "from": "server-ws",
+      "to": "client-active-1",
+      "label": "/connect → WebSocket"
+    },
+    {
+      "from": "client-initiator-2",
+      "to": "client-ice-1",
+      "label": "Генерация ICE"
+    },
+    {
+      "from": "client-acceptor-4",
+      "to": "client-ice-1",
+      "label": "Генерация ICE"
+    },
+    {
+      "from": "client-ice-1",
+      "to": "client-ice-2",
+      "label": "ICE кандидаты готовы"
+    },
+    {
+      "from": "client-ice-2",
+      "to": "server-ws",
+      "label": "ADD_ICE → WebSocket"
+    },
+    {
+      "from": "server-routes",
+      "to": "server-handler-ice",
+      "label": "ADD_ICE"
+    },
+    {
+      "from": "client-ice-2",
+      "to": "client-ice-3",
+      "label": "ADD_ICE → WebSocket"
+    },
+    {
+      "from": "client-ice-3",
+      "to": "server-ws",
+      "label": "SWAP_ICE → WebSocket"
+    },
+    {
+      "from": "server-routes",
+      "to": "server-handler-swap",
+      "label": "SWAP_ICE"
+    },
+    {
+      "from": "server-handler-swap",
+      "to": "server-send",
+      "label": "sendMessage()"
+    },
+    {
+      "from": "server-ws",
+      "to": "client-ice-4",
+      "label": "/swapIce → WebSocket"
+    },
+    {
+      "from": "client-ice-4",
+      "to": "client-active-1",
+      "label": "swapIce → subscribe"
+    },
+    {
+      "from": "client-active-1",
+      "to": "client-active-2",
+      "label": "Соединение готово"
+    },
+    {
+      "from": "client-active-2",
+      "to": "client-media-1",
+      "label": "Активный звонок"
+    },
+    {
+      "from": "client-media-1",
+      "to": "client-media-2",
+      "label": "Изменение медиа"
+    },
+    {
+      "from": "client-media-2",
+      "to": "server-ws",
+      "label": "UPDATE_OFFER → WebSocket"
+    },
+    {
+      "from": "server-routes",
+      "to": "server-handler-update-offer",
+      "label": "UPDATE_OFFER"
+    },
+    {
+      "from": "server-handler-update-offer",
+      "to": "server-send",
+      "label": "sendMessage()"
+    },
+    {
+      "from": "server-ws",
+      "to": "client-media-3",
+      "label": "/updateOffer → WebSocket"
+    },
+    {
+      "from": "client-media-3",
+      "to": "client-media-4",
+      "label": "updateOffer → subscribe"
+    },
+    {
+      "from": "client-media-4",
+      "to": "server-ws",
+      "label": "UPDATE_ANSWER → WebSocket"
+    },
+    {
+      "from": "server-routes",
+      "to": "server-handler-update-answer",
+      "label": "UPDATE_ANSWER"
+    },
+    {
+      "from": "server-handler-update-answer",
+      "to": "server-send",
+      "label": "sendMessage()"
+    },
+    {
+      "from": "server-handler-update-answer",
+      "to": "server-broadcast",
+      "label": "broadcast()"
+    },
+    {
+      "from": "server-ws",
+      "to": "client-media-3",
+      "label": "/updateAnswer → WebSocket"
+    },
+    {
+      "from": "server-ws",
+      "to": "client-ice-2",
+      "label": "/updateIce → WebSocket"
+    },
+    {
+      "from": "client-error-1",
+      "to": "server-ws",
+      "label": "DECLINE → WebSocket"
+    },
+    {
+      "from": "server-routes",
+      "to": "server-handler-decline",
+      "label": "DECLINE"
+    },
+    {
+      "from": "server-handler-decline",
+      "to": "server-send",
+      "label": "sendMessage()"
+    },
+    {
+      "from": "server-ws",
+      "to": "client-error-2",
+      "label": "/decline → WebSocket"
+    },
+    {
+      "from": "server-handler-offer",
+      "to": "server-management",
+      "label": "uses"
+    },
+    {
+      "from": "server-handler-answer",
+      "to": "server-management",
+      "label": "uses"
+    },
+    {
+      "from": "server-handler-decline",
+      "to": "server-management",
+      "label": "uses"
+    },
+    {
+      "from": "server-handler-swap",
+      "to": "server-management",
+      "label": "uses"
+    },
+    {
+      "from": "server-management",
+      "to": "server-storage-users",
+      "label": "read/write"
+    },
+    {
+      "from": "server-management",
+      "to": "server-storage-pairs",
+      "label": "read/write"
+    },
+    {
+      "from": "server-management",
+      "to": "server-storage-waiting",
+      "label": "read/write"
+    },
+    {
+      "from": "server-ws",
+      "to": "server-heartbeat",
+      "label": "startHeartbeat()"
+    },
+    {
+      "from": "server-handler-offer",
+      "to": "server-error",
+      "label": "on error"
+    },
+    {
+      "from": "server-handler-answer",
+      "to": "server-error",
+      "label": "on error"
+    },
+    {
+      "from": "server-error",
+      "to": "server-logger",
+      "label": "logError()"
+    }
+  ]
+}

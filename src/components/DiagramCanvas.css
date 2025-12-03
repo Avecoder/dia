@@ -1,0 +1,294 @@
+.diagram-container {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #fafafa;
+  cursor: grab;
+}
+
+.diagram-container:active {
+  cursor: grabbing;
+}
+
+.diagram-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.diagram-node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 100;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.diagram-node:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+
+.diagram-node-circle {
+  border-radius: 50%;
+  border: 3px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.diagram-node-rectangle {
+  border-radius: 8px;
+  border: 2px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.diagram-node-diamond {
+  transform: rotate(45deg);
+  border: 2px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.diagram-node-diamond .node-label {
+  transform: rotate(-45deg);
+}
+
+.diagram-node-hexagon {
+  clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+  border: 2px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Клиенты */
+.diagram-node-client {
+  background: #c8a8e9;
+  border-color: #a78bfa;
+}
+
+/* Серверы */
+.diagram-node-server {
+  background: #f5a3b7;
+  border-color: #f687b3;
+}
+
+/* Обработчики */
+.diagram-node-handler {
+  background: #a5d8ff;
+  border-color: #7cc5f3;
+}
+
+/* Утилиты */
+.diagram-node-utility {
+  background: #b4e6d1;
+  border-color: #86d9b8;
+}
+
+/* Хранилища */
+.diagram-node-storage {
+  background: #fde68a;
+  border-color: #fcd34d;
+}
+
+/* Системные */
+.diagram-node-system {
+  background: #bae6fd;
+  border-color: #7dd3fc;
+}
+
+/* Управление */
+.diagram-node-management {
+  background: #e0e7ff;
+  border-color: #c7d2fe;
+}
+
+/* По умолчанию */
+.diagram-node-default {
+  background: #fce7f3;
+  border-color: #fbcfe8;
+}
+
+/* Категории для client-data.json */
+.diagram-node-init {
+  background: #e0f2fe;
+  border-color: #7dd3fc;
+}
+
+.diagram-node-initiator {
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+.diagram-node-acceptor {
+  background: #fef3c7;
+  border-color: #fcd34d;
+}
+
+.diagram-node-ice {
+  background: #d1fae5;
+  border-color: #6ee7b7;
+}
+
+.diagram-node-active {
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.diagram-node-media {
+  background: #fce7f3;
+  border-color: #f9a8d4;
+}
+
+.diagram-node-monitoring {
+  background: #fef3c7;
+  border-color: #fbbf24;
+}
+
+.diagram-node-error {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.diagram-node-close {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.diagram-node-connection {
+  background: #e0e7ff;
+  border-color: #a5b4fc;
+}
+
+.diagram-node-reconnect {
+  background: #fef3c7;
+  border-color: #fcd34d;
+}
+
+.node-label {
+  color: #000;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  padding: 4px 8px;
+  line-height: 1.2;
+  word-break: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.diagram-edge {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.edge-label {
+  font-size: 12px;
+  color: #333;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.diagram-node.selected {
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.5);
+  z-index: 200 !important;
+}
+
+.node-description-tooltip {
+  background: white;
+  border: 2px solid #2196F3;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 250px;
+  max-width: 400px;
+  z-index: 1000 !important;
+  transform-origin: top left;
+  pointer-events: auto;
+}
+
+.tooltip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #2196F3;
+  color: white;
+  border-radius: 6px 6px 0 0;
+}
+
+.tooltip-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.tooltip-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.tooltip-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.tooltip-content {
+  padding: 16px;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Затемненные элементы (нерелевантные) */
+.diagram-node.dimmed {
+  opacity: 0.2 !important;
+  filter: grayscale(0.8);
+  pointer-events: auto; /* Все еще можно кликать */
+}
+
+.diagram-node.dimmed:hover {
+  opacity: 0.4 !important;
+  transform: scale(1.02);
+}
+
+/* Подсветка релевантных элементов */
+.diagram-node:not(.dimmed) {
+  animation: highlightPulse 2s ease-in-out infinite;
+}
+
+@keyframes highlightPulse {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 0 4px rgba(102, 126, 234, 0.2);
+  }
+}
+
