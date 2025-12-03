@@ -1,0 +1,1107 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "x": 200,
+      "y": 300,
+      "label": "Начало",
+      "type": "circle",
+      "category": "init",
+      "description": "Начальная точка WebRTC процесса. Пользователь инициирует или получает звонок."
+    },
+    {
+      "id": "2",
+      "x": 200,
+      "y": 450,
+      "label": "handleStartPeerConnection",
+      "type": "rectangle",
+      "category": "init",
+      "description": "Создание RTCPeerConnection. Проверка доступности медиа устройств (камера, микрофон). Инициализация локальных потоков."
+    },
+    {
+      "id": "3",
+      "x": 200,
+      "y": 600,
+      "label": "createPeerConnection",
+      "type": "rectangle",
+      "category": "init",
+      "description": "Создание WebRTC соединения через WebRTCConnection. Настройка обработчиков событий (onTrack, onIceCandidate)."
+    },
+    {
+      "id": "49",
+      "x": 200,
+      "y": 750,
+      "label": "Проверка устройств",
+      "type": "rectangle",
+      "category": "init",
+      "description": "Проверка доступности медиа устройств через enumerateDevices(). Определение наличия камеры и микрофона."
+    },
+    {
+      "id": "50",
+      "x": 200,
+      "y": 900,
+      "label": "Определение устройства",
+      "type": "rectangle",
+      "category": "init",
+      "description": "Определение типа устройства (mobile/desktop) через getMobileOS(). Влияет на задержки и обработку звонков."
+    },
+    {
+      "id": "4",
+      "x": 800,
+      "y": 900,
+      "label": "Инициатор звонка",
+      "type": "circle",
+      "category": "initiator",
+      "description": "Пользователь начинает звонок через handleCalling(). Устанавливается isCallInitiator = true. Открывается модальное окно CALL_MODAL."
+    },
+    {
+      "id": "5",
+      "x": 800,
+      "y": 1050,
+      "label": "handleCreateOffer",
+      "type": "rectangle",
+      "category": "initiator",
+      "description": "Создание WebRTC offer через handleCreateOffer(). Учитывается наличие камеры. Создается SDP offer."
+    },
+    {
+      "id": "6",
+      "x": 800,
+      "y": 1200,
+      "label": "Отправка OFFER",
+      "type": "rectangle",
+      "category": "initiator",
+      "description": "Отправка OFFER через WebSocket sendMessageWithPing('/OFFER'). Включает SDP, кандидатов, данные пользователя. sendMessageWithPing автоматически отправляет PING перед сообщением для проверки соединения. Если соединение мертвое (>5 минут без PING), выполняется переподключение. Воспроизведение звонка (playRingtone)."
+    },
+    {
+      "id": "7",
+      "x": 1100,
+      "y": 900,
+      "label": "Получение входящего",
+      "type": "circle",
+      "category": "acceptor",
+      "description": "Получение входящего звонка через subscribe('call'). Сохранение offer от инициатора в spdFromAnotherPeer. Воспроизведение входящего звонка (playCalling)."
+    },
+    {
+      "id": "8",
+      "x": 1100,
+      "y": 1050,
+      "label": "Принятие звонка",
+      "type": "circle",
+      "category": "acceptor",
+      "description": "Пользователь принимает звонок через handleAccept(). Устанавливается isCallInitiator = false. Для мобильных устройств добавляется задержка 1 секунда."
+    },
+    {
+      "id": "9",
+      "x": 1100,
+      "y": 1200,
+      "label": "handleSetRemoteOffer",
+      "type": "rectangle",
+      "category": "acceptor",
+      "description": "Установка remote offer через handleSetRemoteOffer(). Обработка SDP offer от инициатора."
+    },
+    {
+      "id": "10",
+      "x": 1100,
+      "y": 1350,
+      "label": "handleCreateAnswer",
+      "type": "rectangle",
+      "category": "acceptor",
+      "description": "Создание WebRTC answer через handleCreateAnswer(). Создается SDP answer на основе remote offer."
+    },
+    {
+      "id": "11",
+      "x": 1100,
+      "y": 1500,
+      "label": "Отправка ANSWER",
+      "type": "rectangle",
+      "category": "acceptor",
+      "description": "Отправка ANSWER через WebSocket sendMessageWithPing('/ANSWER'). sendMessageWithPing автоматически отправляет PING перед сообщением для проверки соединения. Если соединение мертвое (>5 минут без PING), выполняется переподключение. Включает SDP answer."
+    },
+    {
+      "id": "12",
+      "x": 800,
+      "y": 1350,
+      "label": "Получение ANSWER",
+      "type": "rectangle",
+      "category": "initiator",
+      "description": "Получение ANSWER через subscribe('acceptCall'). Установка remote answer через handleSetRemoteAnswer()."
+    },
+    {
+      "id": "13",
+      "x": 1400,
+      "y": 1500,
+      "label": "Генерация ICE",
+      "type": "rectangle",
+      "category": "ice",
+      "description": "Генерация ICE кандидатов через WebRTC. Кандидаты собираются автоматически при создании offer/answer."
+    },
+    {
+      "id": "14",
+      "x": 1400,
+      "y": 1650,
+      "label": "Отправка ADD_ICE",
+      "type": "rectangle",
+      "category": "ice",
+      "description": "Отправка ICE кандидатов через sendMessageWithPing('/ADD_ICE'). Включает iceParams с массивом кандидатов."
+    },
+    {
+      "id": "15",
+      "x": 1400,
+      "y": 1800,
+      "label": "Отправка SWAP_ICE",
+      "type": "rectangle",
+      "category": "ice",
+      "description": "Отправка сигнала обмена ICE через sendMessageWithPing('/SWAP_ICE'). Запрашивает обмен кандидатами."
+    },
+    {
+      "id": "16",
+      "x": 1400,
+      "y": 1950,
+      "label": "Получение swapIce",
+      "type": "rectangle",
+      "category": "ice",
+      "description": "Получение ICE кандидатов через subscribe('swapIce'). Добавление remote ICE через addRemoteIce()."
+    },
+    {
+      "id": "44",
+      "x": 1700,
+      "y": 1800,
+      "label": "onTrack событие",
+      "type": "rectangle",
+      "category": "active",
+      "description": "Обработка события onTrack от WebRTC. Получение удаленных медиа потоков. Добавление потоков в remoteStreams."
+    },
+    {
+      "id": "17",
+      "x": 1700,
+      "y": 1950,
+      "label": "Событие connect",
+      "type": "circle",
+      "category": "active",
+      "description": "Получение события 'connect' от сервера. Установка isCallReady = true. Статус меняется на 'call'. Остановка звуков звонка."
+    },
+    {
+      "id": "18",
+      "x": 1700,
+      "y": 2100,
+      "label": "startKeepAlive",
+      "type": "rectangle",
+      "category": "active",
+      "description": "Запуск keep-alive механизма. Отправка PING каждые 30 секунд для поддержания соединения. Работает только для инициатора звонка. Если сервер не отвечает на PING или соединение разорвано, выполняется автоматическое переподключение. Сервер закрывает соединения без PING более 5 минут."
+    },
+    {
+      "id": "19",
+      "x": 1700,
+      "y": 2250,
+      "label": "startConnectionMonitoring",
+      "type": "rectangle",
+      "category": "active",
+      "description": "Запуск мониторинга соединения. Проверка состояния каждые 3 секунды. Отслеживание disconnected/failed состояний. Работает только для инициатора."
+    },
+    {
+      "id": "20",
+      "x": 1700,
+      "y": 2400,
+      "label": "Активный звонок",
+      "type": "circle",
+      "category": "active",
+      "description": "Звонок установлен и активен. Обмен медиа потоками (аудио/видео). Мониторинг состояния соединения."
+    },
+    {
+      "id": "21",
+      "x": 2000,
+      "y": 2100,
+      "label": "Обновление медиа",
+      "type": "circle",
+      "category": "media",
+      "description": "Изменение медиа потоков: включение/выключение камеры, микрофона. Вызов handleUpdateOffer() для пересогласования."
+    },
+    {
+      "id": "47",
+      "x": 2000,
+      "y": 2250,
+      "label": "handleAddStream",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Добавление локального медиа потока. Включение камеры/микрофона. Создание нового offer для пересогласования."
+    },
+    {
+      "id": "48",
+      "x": 2000,
+      "y": 2400,
+      "label": "handleRemoveStream",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Удаление локального медиа потока. Выключение камеры/микрофона. Создание нового offer для пересогласования."
+    },
+    {
+      "id": "22",
+      "x": 2000,
+      "y": 2550,
+      "label": "handleNegotiationNeeded",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Срабатывает при необходимости пересогласования. Создание нового offer через handleNegotiationNeeded()."
+    },
+    {
+      "id": "23",
+      "x": 2000,
+      "y": 2700,
+      "label": "Отправка UPDATE_OFFER",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Отправка обновленного offer через sendMessageWithPing('/UPDATE_OFFER'). Помечается флагом isUpdateOffer."
+    },
+    {
+      "id": "24",
+      "x": 2000,
+      "y": 2850,
+      "label": "Получение updateOffer",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Получение обновленного offer через subscribe('updateOffer'). Установка remote offer и создание нового answer."
+    },
+    {
+      "id": "25",
+      "x": 2000,
+      "y": 3000,
+      "label": "Отправка UPDATE_ANSWER",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Отправка обновленного answer через sendMessageWithPing('/UPDATE_ANSWER')."
+    },
+    {
+      "id": "26",
+      "x": 2000,
+      "y": 3150,
+      "label": "Получение updateAnswer",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Получение обновленного answer через subscribe('updateAnswer'). Установка remote answer."
+    },
+    {
+      "id": "27",
+      "x": 1400,
+      "y": 2100,
+      "label": "Получение updateIce",
+      "type": "rectangle",
+      "category": "ice",
+      "description": "Получение запроса на обновление ICE через subscribe('updateIce'). Отправка новых ICE кандидатов."
+    },
+    {
+      "id": "28",
+      "x": 1700,
+      "y": 2550,
+      "label": "Получение remoteStreamsId",
+      "type": "rectangle",
+      "category": "active",
+      "description": "Получение ID удаленных потоков через subscribe('remoteStreamsId'). Установка streamId для каждого типа медиа."
+    },
+    {
+      "id": "29",
+      "x": 2000,
+      "y": 3300,
+      "label": "Получение updateMedia",
+      "type": "rectangle",
+      "category": "media",
+      "description": "Получение информации об изменении медиа через subscribe('updateMedia'). Обновление enabledRemote (аудио/видео статус)."
+    },
+    {
+      "id": "30",
+      "x": 2300,
+      "y": 2400,
+      "label": "Мониторинг состояния",
+      "type": "rectangle",
+      "category": "monitoring",
+      "description": "Постоянный мониторинг connectionState и iceConnectionState. Отслеживание изменений. Дебаунс для некритических переходов."
+    },
+    {
+      "id": "31",
+      "x": 2300,
+      "y": 2550,
+      "label": "Обнаружение проблем",
+      "type": "circle",
+      "category": "monitoring",
+      "description": "Обнаружение проблем соединения: disconnected, failed состояния. Подсчет последовательных отключений. Проверка стабильности."
+    },
+    {
+      "id": "32",
+      "x": 2300,
+      "y": 2700,
+      "label": "restartConnection",
+      "type": "rectangle",
+      "category": "monitoring",
+      "description": "Перезапуск соединения при критических проблемах. Создание нового offer с ICE restart. Отправка UPDATE_OFFER."
+    },
+    {
+      "id": "45",
+      "x": 2300,
+      "y": 2850,
+      "label": "Диагностика сети",
+      "type": "rectangle",
+      "category": "monitoring",
+      "description": "Диагностика сетевых проблем через diagnoseNetwork(). Получение статистики через getStats(). Анализ качества соединения."
+    },
+    {
+      "id": "46",
+      "x": 2300,
+      "y": 3000,
+      "label": "getNetworkQuality",
+      "type": "rectangle",
+      "category": "monitoring",
+      "description": "Оценка качества сети на основе состояний соединения. Возвращает: excellent, good, fair, poor."
+    },
+    {
+      "id": "33",
+      "x": 2600,
+      "y": 2700,
+      "label": "Отклонение (инициатор)",
+      "type": "circle",
+      "category": "error",
+      "description": "Инициатор отклоняет звонок через handleDecline(). Отправка DECLINE через WebSocket. Закрытие соединения."
+    },
+    {
+      "id": "34",
+      "x": 2600,
+      "y": 2850,
+      "label": "Получение decline",
+      "type": "rectangle",
+      "category": "error",
+      "description": "Получение отклонения через subscribe('decline'). Показ модального окна CALL_REJECT или закрытие. Закрытие соединения."
+    },
+    {
+      "id": "35",
+      "x": 2600,
+      "y": 3000,
+      "label": "unavailable",
+      "type": "circle",
+      "category": "error",
+      "description": "Получение события 'unavailable' через subscribe('unavailable'). Пользователь недоступен. Показ модального окна. Воспроизведение звука отклонения."
+    },
+    {
+      "id": "36",
+      "x": 2600,
+      "y": 3150,
+      "label": "busy",
+      "type": "circle",
+      "category": "error",
+      "description": "Получение события 'busy' через subscribe('busy'). Пользователь занят. Показ модального окна. Воспроизведение звука отклонения."
+    },
+    {
+      "id": "37",
+      "x": 1700,
+      "y": 2700,
+      "label": "Получение RECONNECT",
+      "type": "rectangle",
+      "category": "active",
+      "description": "Получение события переподключения через subscribe('RECONNECT'). Восстановление состояния звонка. Запуск мониторинга."
+    },
+    {
+      "id": "38",
+      "x": 1700,
+      "y": 2850,
+      "label": "Отправка RECONNECT_SUCCESS",
+      "type": "rectangle",
+      "category": "active",
+      "description": "Отправка подтверждения переподключения через sendMessageWithPing('/RECONNECT_SUCCESS'). Передача статуса звонка."
+    },
+    {
+      "id": "39",
+      "x": 2600,
+      "y": 3300,
+      "label": "Получение cancel",
+      "type": "rectangle",
+      "category": "error",
+      "description": "Получение события отмены через subscribe('cancel'). Закрытие модального окна. Закрытие соединения."
+    },
+    {
+      "id": "40",
+      "x": 2900,
+      "y": 3000,
+      "label": "handleClose",
+      "type": "rectangle",
+      "category": "close",
+      "description": "Закрытие соединения. Остановка всех потоков. Остановка keep-alive и мониторинга. Сброс всех состояний. Удаление всех треков."
+    },
+    {
+      "id": "41",
+      "x": 2900,
+      "y": 3150,
+      "label": "Остановка потоков",
+      "type": "rectangle",
+      "category": "close",
+      "description": "Остановка локальных и удаленных медиа потоков. Удаление всех треков через removeAllTracksGlobal()."
+    },
+    {
+      "id": "42",
+      "x": 2900,
+      "y": 3300,
+      "label": "Сброс состояний",
+      "type": "rectangle",
+      "category": "close",
+      "description": "Сброс всех состояний: isCallReady = false, connectionState = 'initialization', iceConnectionState = 'new'. Сброс флагов."
+    },
+    {
+      "id": "43",
+      "x": 2900,
+      "y": 3450,
+      "label": "Конец",
+      "type": "circle",
+      "category": "close",
+      "description": "Завершение WebRTC процесса. Все ресурсы освобождены. Готовность к новому звонку."
+    },
+    {
+      "id": "51",
+      "x": 500,
+      "y": 600,
+      "label": "WebSocket подключение",
+      "type": "rectangle",
+      "category": "connection",
+      "description": "Подключение к WebSocket серверу через useWebSocket(). Получение socket, sendMessage, sendMessageWithPing, subscribe. sendMessageWithPing автоматически отправляет PING перед каждым сообщением для проверки соединения. Если сервер не отвечает на PING или соединение разорвано, выполняется автоматическое переподключение."
+    },
+    {
+      "id": "52",
+      "x": 800,
+      "y": 1500,
+      "label": "Отправка callStart",
+      "type": "rectangle",
+      "category": "initiator",
+      "description": "Отправка callStart через handleSendData('messenger/callStart'). Включает course_id и user_id (для учителей). Устанавливается pushFlag = false."
+    },
+    {
+      "id": "53",
+      "x": 500,
+      "y": 750,
+      "label": "WebSocket реконнект",
+      "type": "circle",
+      "category": "connection",
+      "description": "Переподключение WebSocket соединения. Восстановление связи с сервером. Автоматический реконнект при разрыве или при обнаружении мертвого соединения (heartbeat timeout > 5 минут). После переподключения отправляется RECONNECT_SUCCESS для восстановления сессии на сервере."
+    },
+    {
+      "id": "54",
+      "x": 3200,
+      "y": 3300,
+      "label": "Получение RECONNECT",
+      "type": "rectangle",
+      "category": "reconnect",
+      "description": "Получение события RECONNECT через subscribe('RECONNECT'). Сервер уведомляет о переподключении клиента. Проверка data.status (ringing/call/idle)."
+    },
+    {
+      "id": "55",
+      "x": 3200,
+      "y": 3450,
+      "label": "Восстановление состояния",
+      "type": "rectangle",
+      "category": "reconnect",
+      "description": "Восстановление состояния звонка после реконнекта. Установка isCallReady = true. Восстановление connectionState и iceConnectionState. Восстановление candidate если был активный звонок."
+    },
+    {
+      "id": "56",
+      "x": 3200,
+      "y": 3600,
+      "label": "Восстановление candidate",
+      "type": "rectangle",
+      "category": "reconnect",
+      "description": "Восстановление информации о собеседнике через setRemotePeer(data.candidate). Сохранение данных о пользователе для продолжения звонка."
+    },
+    {
+      "id": "57",
+      "x": 3200,
+      "y": 3750,
+      "label": "Запуск мониторинга после реконнекта",
+      "type": "rectangle",
+      "category": "reconnect",
+      "description": "Запуск startConnectionMonitoring() после восстановления состояния. Мониторинг соединения возобновляется для инициатора звонка."
+    },
+    {
+      "id": "58",
+      "x": 3200,
+      "y": 3900,
+      "label": "Формирование RECONNECT_SUCCESS",
+      "type": "rectangle",
+      "category": "reconnect",
+      "description": "Формирование ответа для RECONNECT_SUCCESS. Определение текущего статуса (call/idle). Передача candidate если звонок активен."
+    },
+    {
+      "id": "59",
+      "x": 2300,
+      "y": 3150,
+      "label": "reconnectAttempts счетчик",
+      "type": "rectangle",
+      "category": "monitoring",
+      "description": "Счетчик попыток переподключения WebRTC. Максимум 5 попыток. Экспоненциальная задержка до 5 секунд. Сброс при успешном подключении."
+    },
+    {
+      "id": "60",
+      "x": 800,
+      "y": 1650,
+      "label": "Проверка isDataNull",
+      "type": "rectangle",
+      "category": "initiator",
+      "description": "Проверка результата отправки callStart через isDataNull. Предупреждение если отправка не удалась."
+    },
+    {
+      "id": "61",
+      "x": 2300,
+      "y": 3300,
+      "label": "Экспоненциальная задержка",
+      "type": "rectangle",
+      "category": "monitoring",
+      "description": "Экспоненциальная задержка перед перезапуском соединения. Формула: Math.min(1000 * reconnectAttempts, 5000). Максимум 5 секунд."
+    },
+    {
+      "id": "62",
+      "x": 2300,
+      "y": 3450,
+      "label": "Проверка перед перезапуском",
+      "type": "rectangle",
+      "category": "monitoring",
+      "description": "Проверка текущего состояния соединения перед перезапуском. Анализ connectionState и iceConnectionState. Предотвращение ненужных перезапусков."
+    },
+    {
+      "id": "63",
+      "x": 3200,
+      "y": 4050,
+      "label": "Сброс reconnectAttempts",
+      "type": "rectangle",
+      "category": "reconnect",
+      "description": "Сброс счетчика reconnectAttempts при успешном подключении. Сброс при событии 'connect'. Сброс при handleClose()."
+    },
+    {
+      "id": "64",
+      "x": 2600,
+      "y": 3450,
+      "label": "InvalidStateError обработка",
+      "type": "rectangle",
+      "category": "error",
+      "description": "Обработка InvalidStateError при перезапуске. Сброс reconnectAttempts. Вызов handleClose() для полного сброса соединения."
+    },
+    {
+      "id": "65",
+      "x": 2600,
+      "y": 3600,
+      "label": "Максимум попыток достигнут",
+      "type": "circle",
+      "category": "error",
+      "description": "Достигнут максимум попыток переподключения (5). Прекращение автоматических попыток. Требуется ручное вмешательство."
+    },
+    {
+      "id": "66",
+      "x": 3200,
+      "y": 4200,
+      "label": "Восстановление статуса ringing",
+      "type": "rectangle",
+      "category": "reconnect",
+      "description": "Восстановление статуса 'ringing' после реконнекта. Звонок в процессе установления. Ожидание ответа от получателя."
+    },
+    {
+      "id": "67",
+      "x": 3200,
+      "y": 4350,
+      "label": "Восстановление статуса call",
+      "type": "rectangle",
+      "category": "reconnect",
+      "description": "Восстановление статуса 'call' после реконнекта. Активный звонок продолжается. Восстановление всех состояний."
+    },
+    {
+      "id": "68",
+      "x": 3200,
+      "y": 4500,
+      "label": "Статус idle",
+      "type": "rectangle",
+      "category": "reconnect",
+      "description": "Статус 'idle' после реконнекта. Нет активного звонка. Готовность к новому звонку."
+    },
+    {
+      "id": "69",
+      "x": 2600,
+      "y": 3750,
+      "label": "Ошибка при реконнекте",
+      "type": "circle",
+      "category": "error",
+      "description": "Ошибка при обработке реконнекта. Логирование ошибки. Продолжение работы с текущим состоянием."
+    }
+  ],
+  "edges": [
+    {
+      "from": "1",
+      "to": "2",
+      "label": "Начало процесса"
+    },
+    {
+      "from": "2",
+      "to": "3",
+      "label": "Создание соединения"
+    },
+    {
+      "from": "2",
+      "to": "49",
+      "label": "Проверка устройств"
+    },
+    {
+      "from": "49",
+      "to": "50",
+      "label": "enumerateDevices()"
+    },
+    {
+      "from": "3",
+      "to": "4",
+      "label": "Инициатор"
+    },
+    {
+      "from": "3",
+      "to": "7",
+      "label": "Получатель"
+    },
+    {
+      "from": "4",
+      "to": "5",
+      "label": "handleCalling()"
+    },
+    {
+      "from": "5",
+      "to": "6",
+      "label": "Создан offer"
+    },
+    {
+      "from": "6",
+      "to": "7",
+      "label": "OFFER → WebSocket"
+    },
+    {
+      "from": "6",
+      "to": "35",
+      "label": "unavailable → subscribe"
+    },
+    {
+      "from": "6",
+      "to": "36",
+      "label": "busy → subscribe"
+    },
+    {
+      "from": "7",
+      "to": "8",
+      "label": "Пользователь принимает"
+    },
+    {
+      "from": "50",
+      "to": "8",
+      "label": "Определение типа"
+    },
+    {
+      "from": "8",
+      "to": "9",
+      "label": "handleAccept()"
+    },
+    {
+      "from": "9",
+      "to": "10",
+      "label": "Установка offer"
+    },
+    {
+      "from": "10",
+      "to": "11",
+      "label": "Создан answer"
+    },
+    {
+      "from": "11",
+      "to": "12",
+      "label": "ANSWER → WebSocket"
+    },
+    {
+      "from": "12",
+      "to": "13",
+      "label": "Установка answer"
+    },
+    {
+      "from": "5",
+      "to": "13",
+      "label": "Генерация ICE"
+    },
+    {
+      "from": "10",
+      "to": "13",
+      "label": "Генерация ICE"
+    },
+    {
+      "from": "13",
+      "to": "14",
+      "label": "ICE кандидаты готовы"
+    },
+    {
+      "from": "14",
+      "to": "15",
+      "label": "ADD_ICE → WebSocket"
+    },
+    {
+      "from": "15",
+      "to": "16",
+      "label": "SWAP_ICE → WebSocket"
+    },
+    {
+      "from": "16",
+      "to": "17",
+      "label": "swapIce → subscribe"
+    },
+    {
+      "from": "3",
+      "to": "44",
+      "label": "onTrack callback"
+    },
+    {
+      "from": "44",
+      "to": "20",
+      "label": "Потоки получены"
+    },
+    {
+      "from": "17",
+      "to": "18",
+      "label": "Соединение готово"
+    },
+    {
+      "from": "18",
+      "to": "19",
+      "label": "Запуск keep-alive"
+    },
+    {
+      "from": "19",
+      "to": "20",
+      "label": "Запуск мониторинга"
+    },
+    {
+      "from": "20",
+      "to": "21",
+      "label": "Активный звонок"
+    },
+    {
+      "from": "20",
+      "to": "47",
+      "label": "Включение медиа"
+    },
+    {
+      "from": "47",
+      "to": "22",
+      "label": "handleAddStream()"
+    },
+    {
+      "from": "20",
+      "to": "48",
+      "label": "Выключение медиа"
+    },
+    {
+      "from": "48",
+      "to": "22",
+      "label": "handleRemoveStream()"
+    },
+    {
+      "from": "21",
+      "to": "22",
+      "label": "Изменение медиа"
+    },
+    {
+      "from": "22",
+      "to": "23",
+      "label": "negotiationNeeded"
+    },
+    {
+      "from": "23",
+      "to": "24",
+      "label": "UPDATE_OFFER → WebSocket"
+    },
+    {
+      "from": "24",
+      "to": "25",
+      "label": "updateOffer → subscribe"
+    },
+    {
+      "from": "25",
+      "to": "26",
+      "label": "UPDATE_ANSWER → WebSocket"
+    },
+    {
+      "from": "26",
+      "to": "20",
+      "label": "updateAnswer → subscribe"
+    },
+    {
+      "from": "20",
+      "to": "27",
+      "label": "Запрос обновления ICE"
+    },
+    {
+      "from": "27",
+      "to": "14",
+      "label": "updateIce → subscribe"
+    },
+    {
+      "from": "20",
+      "to": "28",
+      "label": "Получение streamIds"
+    },
+    {
+      "from": "28",
+      "to": "44",
+      "label": "remoteStreamsId → subscribe"
+    },
+    {
+      "from": "20",
+      "to": "29",
+      "label": "Изменение медиа статуса"
+    },
+    {
+      "from": "29",
+      "to": "20",
+      "label": "updateMedia → subscribe"
+    },
+    {
+      "from": "20",
+      "to": "30",
+      "label": "Мониторинг состояния"
+    },
+    {
+      "from": "30",
+      "to": "31",
+      "label": "Проверка состояний"
+    },
+    {
+      "from": "31",
+      "to": "32",
+      "label": "Проблемы обнаружены"
+    },
+    {
+      "from": "32",
+      "to": "23",
+      "label": "Перезапуск соединения"
+    },
+    {
+      "from": "20",
+      "to": "45",
+      "label": "Диагностика"
+    },
+    {
+      "from": "45",
+      "to": "46",
+      "label": "diagnoseNetwork()"
+    },
+    {
+      "from": "4",
+      "to": "33",
+      "label": "Отклонение"
+    },
+    {
+      "from": "7",
+      "to": "34",
+      "label": "Отклонение"
+    },
+    {
+      "from": "33",
+      "to": "40",
+      "label": "DECLINE → WebSocket"
+    },
+    {
+      "from": "34",
+      "to": "40",
+      "label": "decline → subscribe"
+    },
+    {
+      "from": "35",
+      "to": "40",
+      "label": "Ошибка"
+    },
+    {
+      "from": "36",
+      "to": "40",
+      "label": "Ошибка"
+    },
+    {
+      "from": "20",
+      "to": "37",
+      "label": "Переподключение"
+    },
+    {
+      "from": "37",
+      "to": "38",
+      "label": "RECONNECT → subscribe"
+    },
+    {
+      "from": "38",
+      "to": "19",
+      "label": "RECONNECT_SUCCESS → WebSocket"
+    },
+    {
+      "from": "20",
+      "to": "39",
+      "label": "Отмена"
+    },
+    {
+      "from": "39",
+      "to": "40",
+      "label": "cancel → subscribe"
+    },
+    {
+      "from": "40",
+      "to": "41",
+      "label": "Закрытие"
+    },
+    {
+      "from": "41",
+      "to": "42",
+      "label": "Остановка потоков"
+    },
+    {
+      "from": "42",
+      "to": "43",
+      "label": "Сброс состояний"
+    },
+    {
+      "from": "1",
+      "to": "51",
+      "label": "WebSocket подключение"
+    },
+    {
+      "from": "51",
+      "to": "4",
+      "label": "Инициатор звонка"
+    },
+    {
+      "from": "51",
+      "to": "7",
+      "label": "Получение входящего"
+    },
+    {
+      "from": "4",
+      "to": "52",
+      "label": "Отправка callStart"
+    },
+    {
+      "from": "52",
+      "to": "60",
+      "label": "handleSendData()"
+    },
+    {
+      "from": "60",
+      "to": "6",
+      "label": "Проверка результата"
+    },
+    {
+      "from": "51",
+      "to": "53",
+      "label": "Разрыв соединения"
+    },
+    {
+      "from": "53",
+      "to": "54",
+      "label": "Автоматический реконнект"
+    },
+    {
+      "from": "54",
+      "to": "55",
+      "label": "RECONNECT → subscribe"
+    },
+    {
+      "from": "56",
+      "to": "66",
+      "label": "status === 'ringing'"
+    },
+    {
+      "from": "56",
+      "to": "67",
+      "label": "status === 'call'"
+    },
+    {
+      "from": "56",
+      "to": "68",
+      "label": "status === 'idle'"
+    },
+    {
+      "from": "66",
+      "to": "57",
+      "label": "Восстановление ringing"
+    },
+    {
+      "from": "67",
+      "to": "57",
+      "label": "Восстановление call"
+    },
+    {
+      "from": "55",
+      "to": "56",
+      "label": "Восстановление candidate"
+    },
+    {
+      "from": "57",
+      "to": "58",
+      "label": "Запуск мониторинга"
+    },
+    {
+      "from": "58",
+      "to": "38",
+      "label": "Формирование ответа"
+    },
+    {
+      "from": "38",
+      "to": "20",
+      "label": "RECONNECT_SUCCESS → WebSocket"
+    },
+    {
+      "from": "54",
+      "to": "69",
+      "label": "Ошибка обработки"
+    },
+    {
+      "from": "32",
+      "to": "59",
+      "label": "Увеличение счетчика"
+    },
+    {
+      "from": "59",
+      "to": "61",
+      "label": "reconnectAttempts++"
+    },
+    {
+      "from": "61",
+      "to": "62",
+      "label": "Расчет задержки"
+    },
+    {
+      "from": "62",
+      "to": "32",
+      "label": "Проверка состояния"
+    },
+    {
+      "from": "59",
+      "to": "65",
+      "label": "reconnectAttempts > 5"
+    },
+    {
+      "from": "17",
+      "to": "63",
+      "label": "Успешное подключение"
+    },
+    {
+      "from": "40",
+      "to": "63",
+      "label": "Закрытие соединения"
+    },
+    {
+      "from": "63",
+      "to": "59",
+      "label": "reconnectAttempts = 0"
+    },
+    {
+      "from": "32",
+      "to": "64",
+      "label": "InvalidStateError"
+    },
+    {
+      "from": "64",
+      "to": "63",
+      "label": "Сброс счетчика"
+    },
+    {
+      "from": "64",
+      "to": "40",
+      "label": "handleClose()"
+    }
+  ]
+}
